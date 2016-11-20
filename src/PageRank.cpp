@@ -16,10 +16,16 @@ int main(int argc, char **argv) {
 	}
 
 	int n = atoi(argv[1]);
-	double d = (atoi(argv[2]) / 100);
+	double d = atof(argv[2]);
+
+	std::cout << "n = " << n << " d = " << d << '\n';
 
 	double sumarFilas [n];
 	double matrix [n][n];
+	double tamanoMatrix = n*n;
+	double cantidadCerosReal = tamanoMatrix * d/100;
+	double cantidadCerosActual;
+	double cantidadCerosIngresar;
 
 	//Lleno la matrix de numeros random y la diagonal en 0
 	for(int i = 0; i < n; i++) {
@@ -44,12 +50,32 @@ int main(int argc, char **argv) {
 		}
 	}
 
+	for(int i = 0 ; i < n ; i++){
+			for(int j = 0 ; j < n ; j++){
+					if(matrix[i][j] == 0){
+						cantidadCerosActual = cantidadCerosActual + 1;
+					};
+			}
+	}
+
+	cantidadCerosIngresar = cantidadCerosReal - cantidadCerosActual;
+
+	for(int i = 0 ; i < cantidadCerosIngresar; ++i){
+					int randomI = rand()%((n-1)-0 + 1) + 0;
+					int randomJ = rand()%((n-1)-0 + 1) + 0;
+					if(matrix[randomI][randomJ] == 0){
+						i = i-1;
+					}else{
+						matrix[randomI][randomJ] = 0;
+					}
+	}
+
 	//Se imprime la matrix
-	for(int i = 0; i < n; i++) {
-		for(int j = 0; j < n; j++) {
-			cout << matrix[i][j] << ' ';
-		}
-		cout<<endl;
+	for(int i = 0 ; i < n ; i++){
+			for(int j = 0 ; j < n ; j++){
+					cout << matrix[i][j] << ' ';
+			}
+			cout<<endl;
 	}
 
 	return 0;
