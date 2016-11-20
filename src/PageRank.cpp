@@ -13,12 +13,16 @@ int main(int argc, char **argv) {
 		cerr << "Missing parameters, please check if your input is correct!" << endl;
 		return 1;
 		exit (EXIT_FAILURE);
+	} else if (atoi(argv[2]) < ((atoi(argv[1]) * 100) / (atoi(argv[1]) * atoi(argv[1])))) {
+		cerr << "Density must be major" << endl;
+		return 1;
+		exit (EXIT_FAILURE);
 	}
 
 	int n = atoi(argv[1]);
 	double d = atof(argv[2]);
 
-	std::cout << "n = " << n << " d = " << d << '\n';
+	cout << "n = " << n << " d = " << d << '\n';
 
 	double sumarFilas [n];
 	double matrix [n][n];
@@ -50,32 +54,32 @@ int main(int argc, char **argv) {
 		}
 	}
 
-	for(int i = 0 ; i < n ; i++){
-			for(int j = 0 ; j < n ; j++){
-					if(matrix[i][j] == 0){
-						cantidadCerosActual = cantidadCerosActual + 1;
-					};
-			}
+	for(int i = 0; i < n; i++) {
+		for(int j = 0; j < n; j++) {
+			if(matrix[i][j] == 0) {
+				cantidadCerosActual = cantidadCerosActual + 1;
+			};
+		}
 	}
 
 	cantidadCerosIngresar = cantidadCerosReal - cantidadCerosActual;
 
-	for(int i = 0 ; i < cantidadCerosIngresar; ++i){
-					int randomI = rand()%((n-1)-0 + 1) + 0;
-					int randomJ = rand()%((n-1)-0 + 1) + 0;
-					if(matrix[randomI][randomJ] == 0){
-						i = i-1;
-					}else{
-						matrix[randomI][randomJ] = 0;
-					}
+	for(int i = 0; i < cantidadCerosIngresar; ++i) {
+		int randomI = rand()%((n-1)-0 + 1) + 0;
+		int randomJ = rand()%((n-1)-0 + 1) + 0;
+		if(matrix[randomI][randomJ] == 0) {
+			i = i-1;
+		}else{
+			matrix[randomI][randomJ] = 0;
+		}
 	}
 
 	//Se imprime la matrix
-	for(int i = 0 ; i < n ; i++){
-			for(int j = 0 ; j < n ; j++){
-					cout << matrix[i][j] << ' ';
-			}
-			cout<<endl;
+	for(int i = 0; i < n; i++) {
+		for(int j = 0; j < n; j++) {
+			cout << matrix[i][j] << ' ';
+		}
+		cout<<endl;
 	}
 
 	return 0;
