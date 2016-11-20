@@ -33,14 +33,14 @@ int main(int argc, char **argv) {
 	double vector[n];
 	double sumRowVector;
 	double resultVector[n];
-	double valorVector = 1/n;
+	double oldResultVector[n];
 
 	//Lleno la matrix de numeros random y la diagonal en 0
 	for(int i = 0; i < n; i++) {
 		for(int j = 0; j < n; j++) {
 			matrix[i][j] = (double)rand() / (double)RAND_MAX;
-			matrix[i][i] = 0;
 		}
+		matrix[i][i] = 0;
 	}
 
 	//Sumo las filas, la suma se divide por 1 y se agrega esto a un arreglo
@@ -79,15 +79,40 @@ int main(int argc, char **argv) {
 	}
 
 	for(int i = 0; i < n; i++) {
-		vector[i] = valorVector;
+		vector[i] = (1 / (double)(1 / n));
 	}
 
+	double resultVectorValue = -1;
+	double oldResultVectorValue = 0;
+	int count = 0;
 	//Se multiplica el vector por la matrix
-	for(int i = 0; i < n; i++) {
-		for(int j = 0; j < n; j++) {
-				resultVector[i] += (matrix[i][j]*vector[j]);
+	while(true) {
+
+		double dif = resultVectorValue - oldResultVectorValue;
+
+		if (dif != 0) {
+			for (int i = 0; i < n; i++) {
+				oldResultVector[i] = resultVector[i];
+			}
+
+			for(int i = 0; i < n; i++) {
+				for(int j = 0; j < n; j++) {
+					resultVector[i] += (matrix[i][j]*vector[j]);
+				}
+			}
+		} else {
+			break;
 		}
+
+		for (int i = 0; i < n; i++) {
+			resultVectorValue += resultVector[i];
+			oldResultVectorValue += oldResultVector[i];
+		}
+
+		count++;
+		std::cout << "iteracion: " << count << '\n';
 	}
+
 
 	//Se imprime la matrix
 	cout << "MATRIX" << endl;
@@ -101,14 +126,14 @@ int main(int argc, char **argv) {
 	//Se imprime el vector
 	cout << "VECTOR" << endl;
 	for(int i = 0; i < n; i++) {
-			cout << vector[i] << ' ';
+		cout << vector[i] << ' ';
 	}
 	cout<<endl;
 
 	//Se imprime el vector resultado
 	cout << "RESULT VECTOR" << endl;
 	for(int i = 0; i < n; i++) {
-			cout << resultVector[i] << ' ';
+		cout << resultVector[i] << ' ';
 	}
 	cout<<endl;
 
