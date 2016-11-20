@@ -7,7 +7,18 @@
 
 using namespace std;
 
-static double TOLERANCE = 0.00000000001;
+static double TOLERANCE = 0.0000000000000000000000000000001;
+
+double maximumValue(double array[], int n)
+{
+     double max = array[0];
+     for(int i = 0; i < n; i++){
+          if(array[i] > max){
+            max = array[i];
+          }
+     }
+     return max;
+}
 
 int main(int argc, char **argv) {
 
@@ -36,6 +47,7 @@ int main(int argc, char **argv) {
 	double sumRowVector;
 	double resultVector[n];
 	double oldResultVector[n];
+	double vectorParada[n];
 
 	//Lleno la matrix de numeros random y la diagonal en 0
 	for(int i = 0; i < n; i++) {
@@ -88,19 +100,28 @@ int main(int argc, char **argv) {
 	double resultVectorValue = 1;
 	double dif = 0;
 	//Se multiplica el vector por la matrix
+	int count = 0;
+
+	for(int i = 0; i < n; i++) {
+		for(int j = 0; j < n; j++) {
+			resultVector[i] += (matrix[i][j]*vector[j]);
+		}
+	}
+	for (int i = 0; i < n; i++) {
+		vectorParada[i] = abs(resultVector[i] - vector[i]);
+	}
+	double maxValue = maximumValue(vectorParada, n);
+	cout << "maxValueAfuera: "<< maxValue << endl;
+
+
 	while(true) {
 
-		dif = resultVectorValue - vectorValue;
-		bool isDif = dif > TOLERANCE;
+		std::cout << "maxValue: " << maxValue << '\n';
 
-		std::cout << "Dif: " << dif << '\n';
-		std::cout << "Is dif: " << isDif << '\n';
-
-		if (dif > TOLERANCE) {
+		if (!(TOLERANCE < maxValue)) {
 			for (int i = 0; i < n; i++) {
 				vector[i] = resultVector[i];
 			}
-
 			for(int i = 0; i < n; i++) {
 				for(int j = 0; j < n; j++) {
 					resultVector[i] += (matrix[i][j]*vector[j]);
@@ -110,10 +131,12 @@ int main(int argc, char **argv) {
 			break;
 		}
 
+		count = count +1 ;
+
 		for (int i = 0; i < n; i++) {
-			vectorValue += vector[i];
-			resultVectorValue += resultVector[i];
+			vectorParada[i] = abs(resultVector[i] - vector[i]);
 		}
+		double maxValue = maximumValue(vectorParada, n);
 	}
 
 	//Se imprime la matrix
@@ -124,6 +147,8 @@ int main(int argc, char **argv) {
 		}
 		cout<<endl;
 	}
+
+	cout << "COUNT: " <<count << endl;
 
 	//Se imprime el vector
 	cout << "VECTOR" << endl;
