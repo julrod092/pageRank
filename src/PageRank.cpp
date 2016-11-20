@@ -7,6 +7,8 @@
 
 using namespace std;
 
+static double TOLERANCE = 0.00000000001;
+
 int main(int argc, char **argv) {
 
 	if (argc != 3) {
@@ -79,20 +81,24 @@ int main(int argc, char **argv) {
 	}
 
 	for(int i = 0; i < n; i++) {
-		vector[i] = (1 / (double)(1 / n));
+		vector[i] = (double)1 / n;
 	}
 
-	double resultVectorValue = -1;
-	double oldResultVectorValue = 0;
-	int count = 0;
+	double vectorValue = 0;
+	double resultVectorValue = 1;
+	double dif = 0;
 	//Se multiplica el vector por la matrix
 	while(true) {
 
-		double dif = resultVectorValue - oldResultVectorValue;
+		dif = resultVectorValue - vectorValue;
+		bool isDif = dif > TOLERANCE;
 
-		if (dif != 0) {
+		std::cout << "Dif: " << dif << '\n';
+		std::cout << "Is dif: " << isDif << '\n';
+
+		if (dif > TOLERANCE) {
 			for (int i = 0; i < n; i++) {
-				oldResultVector[i] = resultVector[i];
+				vector[i] = resultVector[i];
 			}
 
 			for(int i = 0; i < n; i++) {
@@ -105,14 +111,10 @@ int main(int argc, char **argv) {
 		}
 
 		for (int i = 0; i < n; i++) {
+			vectorValue += vector[i];
 			resultVectorValue += resultVector[i];
-			oldResultVectorValue += oldResultVector[i];
 		}
-
-		count++;
-		std::cout << "iteracion: " << count << '\n';
 	}
-
 
 	//Se imprime la matrix
 	cout << "MATRIX" << endl;
