@@ -18,8 +18,6 @@ int main(int argc, char **argv) {
 	int n = atoi(argv[1]);
 	double d = atof(argv[2]);
 
-	std::cout << "n = " << n << " d = " << d << '\n';
-
 	double sumarFilas [n];
 	double matrix [n][n];
 
