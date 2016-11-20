@@ -16,7 +16,7 @@ int main(int argc, char **argv) {
 	}
 
 	int n = atoi(argv[1]);
-	double d = atof(argv[2]);
+	double d = (atoi(argv[2]) / 100);
 
 	double sumarFilas [n];
 	double matrix [n][n];
