@@ -32,6 +32,7 @@ int main(int argc, char **argv) {
 	double cantidadCerosIngresar;
 	double vector[n];
 	double sumRowVector;
+	double resultVector[n];
 
 	//Lleno el vector de numero random
 	//Lleno la matrix de numeros random y la diagonal en 0
@@ -83,6 +84,13 @@ int main(int argc, char **argv) {
 		}
 	}
 
+	//Se multiplica el vector por la matrix
+	for(int i = 0; i < n; i++) {
+		for(int j = 0; j < n; j++) {
+				resultVector[i] += (matrix[i][j]*vector[j]);
+		}
+	}
+
 
 
 	//Se imprime la matrix
@@ -99,6 +107,14 @@ int main(int argc, char **argv) {
 	for(int i = 0; i < n; i++) {
 			cout << vector[i] << ' ';
 	}
+	cout<<endl;
+
+	//Se imprime el vector resultado
+	cout << "RESULT VECTOR" << endl;
+	for(int i = 0; i < n; i++) {
+			cout << resultVector[i] << ' ';
+	}
+	cout<<endl;
 
 	return 0;
 }
