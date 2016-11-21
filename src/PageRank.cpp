@@ -1,5 +1,6 @@
 #include <iostream>
-#include <math.h>
+#include <cmath>
+#include <time.h>
 #include <stdlib.h>
 #include <ctype.h>
 #include <stdio.h>
@@ -7,17 +8,17 @@
 
 using namespace std;
 
-static double TOLERANCE = 0.0000000000000000000000000000001;
+static double TOLERANCE = 0.000000000000000000000001;
 
 double maximumValue(double array[], int n)
 {
-     double max = array[0];
-     for(int i = 0; i < n; i++){
-          if(array[i] > max){
-            max = array[i];
-          }
-     }
-     return max;
+	double max = array[0];
+	for(int i = 0; i < n; i++) {
+		if(array[i] > max) {
+			max = array[i];
+		}
+	}
+	return max;
 }
 
 int main(int argc, char **argv) {
@@ -35,12 +36,10 @@ int main(int argc, char **argv) {
 	int n = atoi(argv[1]);
 	double d = atof(argv[2]);
 
-	cout << "n = " << n << " d = " << d << '\n';
-
 	double sumarColumnas [n];
 	double matrix [n][n];
 	double tamanoMatrix = n*n;
-	double cantidadCerosReal = tamanoMatrix * d/100;
+	double cantidadCerosReal = ceil(tamanoMatrix * d/100);
 	double cantidadCerosActual;
 	double cantidadCerosIngresar;
 	double vector[n];
@@ -48,6 +47,8 @@ int main(int argc, char **argv) {
 	double resultVector[n];
 	double oldResultVector[n];
 	double vectorParada[n];
+
+
 
 	//Lleno la matrix de numeros random y la diagonal en 0
 	for(int i = 0; i < n; i++) {
@@ -57,34 +58,20 @@ int main(int argc, char **argv) {
 		matrix[i][i] = 0;
 	}
 
-	//Sumo las filas, la suma se divide por 1 y se agrega esto a un arreglo
-	for(int i = 0; i < n; i++) {
-		for(int j = 0; j < n; j++) {
-			sumarColumnas[i] = sumarColumnas[i] + matrix[i][j];
-		}
-		sumarColumnas[i] = 1/sumarColumnas[i];
-	}
-
-	//Cada posicion de cada fila se multiplica por el numero correspondiente calculado anteriormente
-	for(int i = 0; i < n; i++) {
-		for(int j = 0; j < n; j++) {
-			matrix[i][j] = sumarColumnas[i]*matrix[i][j];
-		}
-	}
-
 	for(int i = 0; i < n; i++) {
 		for(int j = 0; j < n; j++) {
 			if(matrix[i][j] == 0) {
-				cantidadCerosActual = cantidadCerosActual + 1;
+				cantidadCerosActual++;
 			};
 		}
 	}
 
 	cantidadCerosIngresar = cantidadCerosReal - cantidadCerosActual;
+	cout << cantidadCerosIngresar << endl;
 
 	for(int i = 0; i < cantidadCerosIngresar; ++i) {
-		int randomI = rand()%((n-1)-0 + 1) + 0;
-		int randomJ = rand()%((n-1)-0 + 1) + 0;
+		int randomI = rand() % n + 1;
+		int randomJ = rand() % n + 1;
 		if(matrix[randomI][randomJ] == 0) {
 			i = i-1;
 		}else{
@@ -92,52 +79,27 @@ int main(int argc, char **argv) {
 		}
 	}
 
+	//Sumo las filas, la suma se divide por 1 y se agrega esto a un arreglo
+	for(int i = 0; i < n; i++) {
+		for(int j = 0; j < n; j++) {
+			sumarColumnas[i] = sumarColumnas[i] + matrix[j][i];
+		}
+		sumarColumnas[i] = 1/sumarColumnas[i];
+	}
+
+	//Cada posicion de cada fila se multiplica por el numero correspondiente calculado anteriormente
+	for(int i = 0; i < n; i++) {
+		for(int j = 0; j < n; j++) {
+			matrix[j][i] = sumarColumnas[i] * matrix[j][i];
+		}
+	}
+
 	for(int i = 0; i < n; i++) {
 		vector[i] = (double)1 / n;
 	}
 
-	double vectorValue = 0;
-	double resultVectorValue = 1;
-	double dif = 0;
-	//Se multiplica el vector por la matrix
-	int count = 0;
-
-	for(int i = 0; i < n; i++) {
-		for(int j = 0; j < n; j++) {
-			resultVector[i] += (matrix[i][j]*vector[j]);
-		}
-	}
-	for (int i = 0; i < n; i++) {
-		vectorParada[i] = abs(resultVector[i] - vector[i]);
-	}
-	double maxValue = maximumValue(vectorParada, n);
-	cout << "maxValueAfuera: "<< maxValue << endl;
-
-
-	while(true) {
-
-		std::cout << "maxValue: " << maxValue << '\n';
-
-		if (!(TOLERANCE < maxValue)) {
-			for (int i = 0; i < n; i++) {
-				vector[i] = resultVector[i];
-			}
-			for(int i = 0; i < n; i++) {
-				for(int j = 0; j < n; j++) {
-					resultVector[i] += (matrix[i][j]*vector[j]);
-				}
-			}
-		} else {
-			break;
-		}
-
-		count = count +1 ;
-
-		for (int i = 0; i < n; i++) {
-			vectorParada[i] = abs(resultVector[i] - vector[i]);
-		}
-		double maxValue = maximumValue(vectorParada, n);
-	}
+	double maxValue = 1;
+	int count = -1;
 
 	//Se imprime la matrix
 	cout << "MATRIX" << endl;
@@ -148,21 +110,53 @@ int main(int argc, char **argv) {
 		cout<<endl;
 	}
 
-	cout << "COUNT: " <<count << endl;
+	while(true) {
 
-	//Se imprime el vector
-	cout << "VECTOR" << endl;
-	for(int i = 0; i < n; i++) {
-		cout << vector[i] << ' ';
-	}
-	cout<<endl;
+		//Se imprime el vector
+		cout << "VECTOR" << endl;
+		for(int i = 0; i < n; i++) {
+			cout << vector[i] << ' ';
+		}
+		cout<<endl;
 
-	//Se imprime el vector resultado
-	cout << "RESULT VECTOR" << endl;
-	for(int i = 0; i < n; i++) {
-		cout << resultVector[i] << ' ';
+		if (maxValue > TOLERANCE) {
+			for(int i = 0; i < n; i++) {
+				for(int j = 0; j < n; j++) {
+					resultVector[i] += (matrix[i][j] * vector[j]);
+				}
+			}
+		} else {
+			break;
+		}
+
+		//Se imprime el vector resultado
+		cout << "RESULT VECTOR" << endl;
+		for(int i = 0; i < n; i++) {
+			cout << resultVector[i] << ' ';
+		}
+		cout<<endl;
+
+		for (int i = 0; i < n; i++) {
+			vectorParada[i] = abs(resultVector[i] - vector[i]);
+		}
+
+		cout << "PARADA VECTOR" << endl;
+		for(int i = 0; i < n; i++) {
+			cout << vectorParada[i] << ' ';
+		}
+		cout<<endl;
+
+		maxValue = maximumValue(vectorParada, n);
+
+		for (int i = 0; i < n; i++) {
+			vector[i] = resultVector[i];
+		}
+
+		count++;
+		if (count > 1) {
+			break;
+		}
 	}
-	cout<<endl;
 
 	return 0;
 }
