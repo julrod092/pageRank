@@ -9,3 +9,5 @@ bin:
 clean:
 	rm -rf bin
 
+run: bin/pagerank
+	bin/pagerank ${n} ${d}

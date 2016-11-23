@@ -1,1 +1,3 @@
 bin
+tmp
+src/PageRankCopy.cpp
