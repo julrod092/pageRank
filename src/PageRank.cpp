@@ -10,17 +10,6 @@ using namespace std;
 
 static double TOLERANCE = 0.000000000000000000000001;
 
-double maximumValue(double array[], int n)
-{
-	double max = array[0];
-	for(int i = 0; i < n; i++) {
-		if(array[i] > max) {
-			max = array[i];
-		}
-	}
-	return max;
-}
-
 int main(int argc, char **argv) {
 
 	if (argc != 3) {
@@ -92,13 +81,6 @@ int main(int argc, char **argv) {
 		}
 	}
 
-	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < n; j++) {
-			cout << matrix[i][j] << " ";
-		}
-		cout << endl;
-	}
-
 	for(int i = 0; i < n; i++) {
 		vector[i] = (double)1 / n;
 	}
@@ -116,13 +98,6 @@ int main(int argc, char **argv) {
 	int count = 0;
 
 	while(true) {
-
-		//Se imprime el vector
-		cout << "VECTOR" << endl;
-		for(int i = 0; i < n; i++) {
-			cout << vector[i] << ' ';
-		}
-		cout<<endl;
 
 		if (maxValue > TOLERANCE) {
 			for(int i = 0; i < n; i++) {
@@ -145,18 +120,21 @@ int main(int argc, char **argv) {
 			vectorParada[i] = abs(resultVector[i] - vector[i]);
 		}
 
-		cout << "PARADA VECTOR" << endl;
-		for(int i = 0; i < n; i++) {
-			cout << vectorParada[i] << ' ';
-		}
-		cout<<endl;
-
-		maxValue = maximumValue(vectorParada, n);
+		maxValue = *max_element(vectorParada, vectorParada + n);
 
 		for (int i = 0; i < n; i++) {
 			vector[i] = resultVector[i];
 		}
+
+		fill(resultVector, resultVector + n, 0);
 	}
+
+	//Se imprime el vector
+	cout << "VECTOR" << endl;
+	for(int i = 0; i < n; i++) {
+		cout << vector[i] << ' ';
+	}
+	cout<<endl;
 
 	return 0;
 }
