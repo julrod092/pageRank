@@ -66,8 +66,8 @@ int main(int argc, char **argv) {
 
 	int cntNum = ceil((n * n) * d);
 
-	const int BLOCKROWS = n/k;	/* Numero de filas a descomponer */
-	const int BLOCKCOLS = n;	/* Numero de columnas a descomponer */ 
+	const int BLOCKROWS = n/k;      /* Numero de filas a descomponer */
+	const int BLOCKCOLS = n;        /* Numero de columnas a descomponer */
 	double subMatrizMpi[BLOCKCOLS][BLOCKROWS];
 
 	for (int i = 0; i < n; i++) {
@@ -155,10 +155,12 @@ int main(int argc, char **argv) {
 
 	int disps[k];
 	int counts[k];
-	for (int ii=0; ii < sqrt(k); ii++) {
-		for (int jj=0; jj < sqrt(k); jj++) {
-			disps[ii * sqrt(k) + jj] = matrix[i][j];
-			counts[ii * sqrt(k) + jj] = 1;
+	int raizK = ceil(sqrt(k));
+
+	for (int ii=0; ii < raizK; ii++) {
+		for (int jj=0; jj < raizK; jj++) {
+			disps[ii * raizK + jj] = matrix[i][j];
+			counts[ii * raizK + jj] = 1;
 		}
 	}
 
