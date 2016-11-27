@@ -5,10 +5,13 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <mpi.h>
 
 using namespace std;
 
 static double TOLERANCE = 0.000000000000000000000001;
+
+#define k 2
 
 double maximumValue(double array[], int n)
 {
@@ -41,6 +44,12 @@ int main(int argc, char **argv) {
 		return 1;
 	}
 
+	MPI_Init(&argc, &argv);
+	int p, rank;
+	MPI_Comm_size(MPI_COMM_WORLD, &p);
+	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+	char mpi;
+
 	int n = abs(atoi(argv[1]));
 	double d = abs(atof(argv[2]));
 
@@ -57,11 +66,23 @@ int main(int argc, char **argv) {
 
 	int cntNum = ceil((n * n) * d);
 
+	const int BLOCKROWS = n/k;	/* Numero de filas a descomponer */
+	const int BLOCKCOLS = n;	/* Numero de columnas a descomponer */ 
+	double subMatrizMpi[BLOCKCOLS][BLOCKROWS];
+
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < n; j++) {
 			matrix[i][j] = 0;
 		}
+		subMatrizMpi[0][i] = 0;
 	}
+
+	MPI_Datatype blocktype;
+	MPI_Datatype blocktype2;
+
+	MPI_Type_vector(BLOCKROWS, BLOCKCOLS, n, MPI_DOUBLE, &blocktype2);
+	MPI_Type_create_resized(blocktype2, 0, sizeof(double), &blocktype);
+	MPI_Type_commit(&blocktype);
 
 	srand(static_cast<unsigned>(time(0)));
 
@@ -132,7 +153,19 @@ int main(int argc, char **argv) {
 	double maxValue = 1;
 	int count = 0;
 
+	int disps[k];
+	int counts[k];
+	for (int ii=0; ii < sqrt(k); ii++) {
+		for (int jj=0; jj < sqrt(k); jj++) {
+			disps[ii * sqrt(k) + jj] = matrix[i][j];
+			counts[ii * sqrt(k) + jj] = 1;
+		}
+	}
+
 	while(true) {
+
+		MPI_Scatterv(matrix, counts, disps, blocktype, subMatrizMpi, BLOCKROWS * BLOCKCOLS, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+
 
 		if (maxValue > TOLERANCE) {
 			for(int i = 0; i < n; i++) {
