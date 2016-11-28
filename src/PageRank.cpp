@@ -193,6 +193,10 @@ int main(int argc, char **argv) {
 
 	}
 
+	MPI_Barrier(MPI_COMM_WORLD);
+
+	MPI_Finalize();
+
 	//Se imprime el vector
 	cout << "VECTOR" << endl;
 	for(int i = 0; i < n; i++) {
