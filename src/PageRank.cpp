@@ -159,7 +159,7 @@ int main(int argc, char **argv) {
 
 	for (int ii=0; ii < raizK; ii++) {
 		for (int jj=0; jj < raizK; jj++) {
-			disps[ii * raizK + jj] = matrix[i][j];
+			disps[ii * raizK + jj] = matrix[ii][jj];
 			counts[ii * raizK + jj] = 1;
 		}
 	}
