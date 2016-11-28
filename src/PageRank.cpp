@@ -106,15 +106,6 @@ int main(int argc, char **argv) {
 		}
 	}
 
-	//Se imprime la matrix
-	cout << "MATRIX" << endl;
-	for(int i = 0; i < n; i++) {
-		for(int j = 0; j < n; j++) {
-			cout << matrix[i][j] << ' ';
-		}
-		cout<<endl;
-	}
-
 	//Sumo las columnas, la suma se divide por 1 y se agrega esto a un arreglo
 	for(int i = 0; i < n; i++) {
 		for(int j = 0; j < n; j++) {
@@ -130,25 +121,9 @@ int main(int argc, char **argv) {
 		}
 	}
 
-	//Se imprime la matrix
-	cout << "MATRIX" << endl;
-	for(int i = 0; i < n; i++) {
-		for(int j = 0; j < n; j++) {
-			cout << matrix[i][j] << ' ';
-		}
-		cout<<endl;
-	}
-
 	for(int i = 0; i < n; i++) {
 		vector[i] = (double)1 / n;
 	}
-
-	//Se imprime el vector
-	cout << "VECTOR" << endl;
-	for(int i = 0; i < n; i++) {
-		cout << vector[i] << ' ';
-	}
-	cout << endl;
 
 	double maxValue = 1;
 	int count = 0;
@@ -196,6 +171,16 @@ int main(int argc, char **argv) {
 	MPI_Barrier(MPI_COMM_WORLD);
 
 	MPI_Finalize();
+
+	/*	//Se imprime la matrix
+		cout << "MATRIX" << endl;
+		for(int i = 0; i < n; i++) {
+			for(int j = 0; j < n; j++) {
+				cout << matrix[i][j] << ' ';
+			}
+			cout<<endl;
+		}
+	*/
 
 	//Se imprime el vector
 	cout << "VECTOR" << endl;
