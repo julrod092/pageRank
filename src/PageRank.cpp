@@ -121,7 +121,6 @@ int main(int argc, char **argv) {
 	for(int i = 0; i < n; i++) {
 		vector[i] = (double)1 / n;
 	}
-
 	//Se imprime el vector
 	cout << "VECTOR" << endl;
 	for(int i = 0; i < n; i++) {
