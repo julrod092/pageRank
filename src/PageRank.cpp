@@ -66,27 +66,27 @@ int main(int argc, char **argv) {
 		exit (EXIT_FAILURE);
 		return 1;
 	}
-/*
-        MPI_Init(&argc, &argv);
-        int p, rank;
-        MPI_Comm_size(MPI_COMM_WORLD, &p);
-        MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-        int n = abs(atoi(argv[1]));
-        double d = abs(atof(argv[2]));
+	MPI_Init(&argc, &argv);
+	int p, rank;
+	MPI_Comm_size(MPI_COMM_WORLD, &p);
+	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-        Matrix matrix (n,n);
-        double sumarColumnas [n];
-        fill(sumarColumnas, sumarColumnas + n, 0);
-        double vector[n];
-        fill(vector, vector + n, 0);
-        double sumRowVector;
-        double resultVector[n];
-        fill(resultVector, resultVector + n, 0);
-        double vectorParada[n];
-        fill(vectorParada, vectorParada + n, 0);
+	int n = abs(atoi(argv[1]));
+	double d = abs(atof(argv[2]));
 
-        int cntNum = ceil((n * n) * d);
+	Matrix matrix (n,n);
+	double sumarColumnas [n];
+	fill(sumarColumnas, sumarColumnas + n, 0);
+	double vector[n];
+	fill(vector, vector + n, 0);
+	double sumRowVector;
+	double resultVector[n];
+	fill(resultVector, resultVector + n, 0);
+	double vectorParada[n];
+	fill(vectorParada, vectorParada + n, 0);
+
+/*        int cntNum = ceil((n * n) * d);
 
         const int BLOCKROWS = n/k;      //Numero de filas a descomponer
         const int BLOCKCOLS = n;        // Numero de columnas a descomponer
