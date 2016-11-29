@@ -106,7 +106,7 @@ int main(int argc, char **argv) {
 	MPI_Type_create_resized(blocktype2, 0, sizeof(double), &blocktype);
 	MPI_Type_commit(&blocktype);
 
-	unsigned seed = static_cast<unsigned>(time(0));
+	long seed = time(0);
 	srand(seed);
 
 	if (rank == 0) {
