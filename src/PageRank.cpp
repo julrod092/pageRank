@@ -229,13 +229,13 @@ int main(int argc, char **argv) {
 				break;
 			}
 
-			for (int i = 0; i < n; i++) {
+			for (int i = 0; i < BLOCKROWS; i++) {
 				vectorParada[i] = abs(resultVector[i] - vector[i]);
 			}
 
 			maxValue = maximumValue(vectorParada, n);
 
-			for (int i = 0; i < n; i++) {
+			for (int i = 0; i < BLOCKROWS; i++) {
 				vector[i] = resultVector[i];
 			}
 
@@ -253,13 +253,13 @@ int main(int argc, char **argv) {
 				break;
 			}
 
-			for (int i = 0; i < n; i++) {
+			for (int i = rank * BLOCKROWS; i < (rank * BLOCKROWS) + (BLOCKROWS - 1); i++) {
 				vectorParada[i] = abs(resultVector[i] - vector[i]);
 			}
 
 			maxValue = maximumValue(vectorParada, n);
 
-			for (int i = 0; i < n; i++) {
+			for (int i = rank * BLOCKROWS; i < (rank * BLOCKROWS) + (BLOCKROWS - 1); i++) {
 				vector[i] = resultVector[i];
 			}
 
