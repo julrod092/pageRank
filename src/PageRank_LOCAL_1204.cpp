@@ -106,7 +106,7 @@ int main(int argc, char **argv) {
 	MPI_Type_create_resized(blocktype2, 0, sizeof(double), &blocktype);
 	MPI_Type_commit(&blocktype);
 
-	long seed = time(0);
+	long seed = static_cast<unsigned>(time(0));
 	srand(seed);
 	cout << rank << endl;
 	cout << seed << endl;
@@ -157,7 +157,6 @@ int main(int argc, char **argv) {
 		cout << "Fin Ciclo rank 0" << endl;
 
 	} else {
-
 		MPI_Recv(&seed, 1, MPI_LONG, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 	
 		for (int j = 0; j < n; j++) {

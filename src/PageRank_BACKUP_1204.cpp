@@ -106,13 +106,21 @@ int main(int argc, char **argv) {
 	MPI_Type_create_resized(blocktype2, 0, sizeof(double), &blocktype);
 	MPI_Type_commit(&blocktype);
 
+<<<<<<< HEAD
+	long seed = static_cast<unsigned>(time(0));
+=======
 	long seed = time(0);
+>>>>>>> 294c49998f016e29e25aa2840ab8121603e2b28f
 	srand(seed);
 	cout << rank << endl;
 	cout << seed << endl;
 
 	if (rank == 0) {
+<<<<<<< HEAD
 		MPI_Send(&seed, 1, MPI_LONG, 1, 0, MPI_COMM_WORLD);
+=======
+		//MPI_Send(&seed, 1, MPI_LONG, 1, 0, MPI_COMM_WORLD);
+>>>>>>> 294c49998f016e29e25aa2840ab8121603e2b28f
 
 		for (int j = 0; j < n; j++) {
 			int i = 1 + (static_cast <int> (rand()) % n) - 1;
@@ -157,9 +165,13 @@ int main(int argc, char **argv) {
 		cout << "Fin Ciclo rank 0" << endl;
 
 	} else {
-
+<<<<<<< HEAD
 		MPI_Recv(&seed, 1, MPI_LONG, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 	
+=======
+		//MPI_Recv(&seed, 1, MPI_LONG, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+
+>>>>>>> 294c49998f016e29e25aa2840ab8121603e2b28f
 		for (int j = 0; j < n; j++) {
 			int i = 1 + (static_cast <int> (rand()) % n) - 1;
 			if (i != j) {
