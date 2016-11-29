@@ -106,11 +106,13 @@ int main(int argc, char **argv) {
 	MPI_Type_create_resized(blocktype2, 0, sizeof(double), &blocktype);
 	MPI_Type_commit(&blocktype);
 
-	unsigned seed = static_cast<unsigned>(time(0));
+	long seed = static_cast<unsigned>(time(0));
 	srand(seed);
+	cout << rank << endl;
+	cout << seed << endl;
 
 	if (rank == 0) {
-		MPI_Send(&seed, 1, MPI_UNSIGNED, 1, 0, MPI_COMM_WORLD);
+		MPI_Send(&seed, 1, MPI_LONG, 1, 0, MPI_COMM_WORLD);
 
 		for (int j = 0; j < n; j++) {
 			int i = 1 + (static_cast <int> (rand()) % n) - 1;
@@ -132,6 +134,7 @@ int main(int argc, char **argv) {
 			}
 		}
 
+
 		//Sumo las columnas, la suma se divide por 1 y se agrega esto a un arreglo
 		for(int i = 0; i < n; i++) {
 			for(int j = 0; j < n; j++) {
@@ -139,6 +142,7 @@ int main(int argc, char **argv) {
 			}
 			sumarColumnas[i] = 1/sumarColumnas[i];
 		}
+
 
 		//Cada posicion de cada columna se multiplica por el numero correspondiente calculado anteriormente
 		for(int i = 0; i < n; i++) {
@@ -150,10 +154,11 @@ int main(int argc, char **argv) {
 		for(int i = 0; i < n; i++) {
 			vector[i] = (double)1 / n;
 		}
+		cout << "Fin Ciclo rank 0" << endl;
 
 	} else {
-		MPI_Recv(&seed, 1, MPI_UNSIGNED, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-
+		MPI_Recv(&seed, 1, MPI_LONG, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+	
 		for (int j = 0; j < n; j++) {
 			int i = 1 + (static_cast <int> (rand()) % n) - 1;
 			if (i != j) {
@@ -192,6 +197,7 @@ int main(int argc, char **argv) {
 		for(int i = 0; i < n; i++) {
 			vector[i] = (double)1 / n;
 		}
+		cout << "Fin Ciclo Rank 1" << endl;
 
 	}
 
@@ -202,8 +208,8 @@ int main(int argc, char **argv) {
 	int counts[k];
 	//int raizK = ceil(sqrt(k));
 
-	for (int ii=1; ii < k; ii++) {
-		disps[ii] = matrix.getValue(BLOCKROWS * k,0);
+	for (int ii=0; ii < k; ii++) {
+		disps[ii] = matrix.getValue(BLOCKROWS * ii,0);
 		counts[ii] = 1;
 	}
 
