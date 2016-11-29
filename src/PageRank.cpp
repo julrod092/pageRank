@@ -108,95 +108,95 @@ int main(int argc, char **argv) {
 
 	unsigned seed = static_cast<unsigned>(time(0));
 	srand(seed);
+
+	if (rank == 0) {
+		MPI_Send(&seed, 1, MPI_UNSIGNED, 1, 0, MPI_COMM_WORLD);
+
+		for (int j = 0; j < n; j++) {
+			int i = 1 + (static_cast <int> (rand()) % n) - 1;
+			if (i != j) {
+				matrix.setValue(i,j,static_cast <double> (rand()) / static_cast <double> (RAND_MAX));
+				cntNum--;
+			}else {
+				j--;
+			}
+		}
+
+		for(int i = 0; i < cntNum; i++) {
+			int ri = 1 + (static_cast <int> (rand()) % n) - 1;
+			int rj = 1 + (static_cast <int> (rand()) % n) - 1;
+			if (ri == rj || matrix.getValue(ri,rj) != 0) {
+				i--;
+			} else {
+				matrix.setValue(ri,rj,static_cast <double> (rand()) / static_cast <double> (RAND_MAX));
+			}
+		}
+
+		//Sumo las columnas, la suma se divide por 1 y se agrega esto a un arreglo
+		for(int i = 0; i < n; i++) {
+			for(int j = 0; j < n; j++) {
+				sumarColumnas[i] = sumarColumnas[i] + matrix.getValue(j,i);
+			}
+			sumarColumnas[i] = 1/sumarColumnas[i];
+		}
+
+		//Cada posicion de cada columna se multiplica por el numero correspondiente calculado anteriormente
+		for(int i = 0; i < n; i++) {
+			for(int j = 0; j < n; j++) {
+				matrix.setValue(j,i,sumarColumnas[i] * matrix.getValue(j,i));
+			}
+		}
+
+		for(int i = 0; i < n; i++) {
+			vector[i] = (double)1 / n;
+		}
+
+	} else {
+		MPI_Recv(&seed, 1, MPI_UNSIGNED, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+
+		for (int j = 0; j < n; j++) {
+			int i = 1 + (static_cast <int> (rand()) % n) - 1;
+			if (i != j) {
+				matrix.setValue(i,j,static_cast <double> (rand()) / static_cast <double> (RAND_MAX));
+				cntNum--;
+			}else {
+				j--;
+			}
+		}
+
+		for(int i = 0; i < cntNum; i++) {
+			int ri = 1 + (static_cast <int> (rand()) % n) - 1;
+			int rj = 1 + (static_cast <int> (rand()) % n) - 1;
+			if (ri == rj || matrix.getValue(ri,rj) != 0) {
+				i--;
+			} else {
+				matrix.setValue(ri,rj,static_cast <double> (rand()) / static_cast <double> (RAND_MAX));
+			}
+		}
+
+		//Sumo las columnas, la suma se divide por 1 y se agrega esto a un arreglo
+		for(int i = 0; i < n; i++) {
+			for(int j = 0; j < n; j++) {
+				sumarColumnas[i] = sumarColumnas[i] + matrix.getValue(j,i);
+			}
+			sumarColumnas[i] = 1/sumarColumnas[i];
+		}
+
+		//Cada posicion de cada columna se multiplica por el numero correspondiente calculado anteriormente
+		for(int i = 0; i < n; i++) {
+			for(int j = 0; j < n; j++) {
+				matrix.setValue(j,i,sumarColumnas[i] * matrix.getValue(j,i));
+			}
+		}
+
+		for(int i = 0; i < n; i++) {
+			vector[i] = (double)1 / n;
+		}
+
+	}
+
+
 /*
-        if (rank == 0){
-                MPI_Send(&seed, 1, MPI_UNSIGNED, 1, 0, MPI_COMM_WORLD);
-
-                for (int j = 0; j < n; j++) {
-                        int i = 1 + (static_cast <int> (rand()) % n) - 1;
-                        if (i != j) {
-                                matrix.setValue(i,j,static_cast <double> (rand()) / static_cast <double> (RAND_MAX));
-                                cntNum--;
-                        }else {
-                                j--;
-                        }
-                }
-
-                for(int i = 0; i < cntNum; i++) {
-                        int ri = 1 + (static_cast <int> (rand()) % n) - 1;
-                        int rj = 1 + (static_cast <int> (rand()) % n) - 1;
-                        if (ri == rj || matrix.getValue(ri,rj) != 0) {
-                                i--;
-                        } else {
-                                matrix.setValue(ri,rj,static_cast <double> (rand()) / static_cast <double> (RAND_MAX));
-                        }
-                }
-
-                //Sumo las columnas, la suma se divide por 1 y se agrega esto a un arreglo
-                for(int i = 0; i < n; i++) {
-                        for(int j = 0; j < n; j++) {
-                                sumarColumnas[i] = sumarColumnas[i] + matrix.getValue(j,i);
-                        }
-                        sumarColumnas[i] = 1/sumarColumnas[i];
-                }
-
-                //Cada posicion de cada columna se multiplica por el numero correspondiente calculado anteriormente
-                for(int i = 0; i < n; i++) {
-                        for(int j = 0; j < n; j++) {
-                                matrix.setValue(j,i,sumarColumnas[i] * matrix.getValue(j,i));
-                        }
-                }
-
-                for(int i = 0; i < n; i++) {
-                        vector[i] = (double)1 / n;
-                }
-
-        } else {
-                MPI_Recv(&seed, 1, MPI_UNSIGNED, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-
-                for (int j = 0; j < n; j++) {
-                        int i = 1 + (static_cast <int> (rand()) % n) - 1;
-                        if (i != j) {
-                                matrix.setValue(i,j,static_cast <double> (rand()) / static_cast <double> (RAND_MAX));
-                                cntNum--;
-                        }else {
-                                j--;
-                        }
-                }
-
-                for(int i = 0; i < cntNum; i++) {
-                        int ri = 1 + (static_cast <int> (rand()) % n) - 1;
-                        int rj = 1 + (static_cast <int> (rand()) % n) - 1;
-                        if (ri == rj || matrix.getValue(ri,rj) != 0) {
-                                i--;
-                        } else {
-                                matrix.setValue(ri,rj,static_cast <double> (rand()) / static_cast <double> (RAND_MAX));
-                        }
-                }
-
-                //Sumo las columnas, la suma se divide por 1 y se agrega esto a un arreglo
-                for(int i = 0; i < n; i++) {
-                        for(int j = 0; j < n; j++) {
-                                sumarColumnas[i] = sumarColumnas[i] + matrix.getValue(j,i);
-                        }
-                        sumarColumnas[i] = 1/sumarColumnas[i];
-                }
-
-                //Cada posicion de cada columna se multiplica por el numero correspondiente calculado anteriormente
-                for(int i = 0; i < n; i++) {
-                        for(int j = 0; j < n; j++) {
-                                matrix.setValue(j,i,sumarColumnas[i] * matrix.getValue(j,i));
-                        }
-                }
-
-                for(int i = 0; i < n; i++) {
-                        vector[i] = (double)1 / n;
-                }
-
-        }
-
-
-
         double maxValue = 1;
         int count = 0;
 
