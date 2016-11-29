@@ -195,87 +195,85 @@ int main(int argc, char **argv) {
 
 	}
 
+	double maxValue = 1;
+	int count = 0;
 
-/*
-        double maxValue = 1;
-        int count = 0;
+	int disps[k];
+	int counts[k];
+	//int raizK = ceil(sqrt(k));
 
-        int disps[k];
-        int counts[k];
-        //int raizK = ceil(sqrt(k));
+	for (int ii=1; ii < k; ii++) {
+		disps[ii] = matrix.getValue(BLOCKROWS * k,0);
+		counts[ii] = 1;
+	}
 
-        for (int ii=1; ii < k; ii++) {
-                disps[ii] = matrix.getValue(BLOCKROWS * k,0);
-                counts[ii] = 1;
-        }
+	while(true) {
 
-        while(true) {
+		if (rank == 0) {
+			MPI_Scatterv(matrix.getMatrix(), counts, disps, blocktype, subMatrizMpi.getMatrix(), BLOCKROWS * BLOCKCOLS, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
-                if (rank == 0) {
-                        MPI_Scatterv(matrix.getMatrix(), counts, disps, blocktype, subMatrizMpi.getMatrix(), BLOCKROWS * BLOCKCOLS, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+			if (maxValue > TOLERANCE) {
+				for(int i = 0; i < BLOCKROWS; i++) {
+					for(int j = 0; j < BLOCKCOLS; j++) {
+						resultVector[i] += (matrix.getValue(i,j) * vector[j]);
+					}
+				}
+			} else {
+				break;
+			}
 
-                        if (maxValue > TOLERANCE) {
-                                for(int i = 0; i < BLOCKROWS; i++) {
-                                        for(int j = 0; j < BLOCKCOLS; j++) {
-                                                resultVector[i] += (matrix.getValue(i,j) * vector[j]);
-                                        }
-                                }
-                        } else {
-                                break;
-                        }
+			for (int i = 0; i < n; i++) {
+				vectorParada[i] = abs(resultVector[i] - vector[i]);
+			}
 
-                        for (int i = 0; i < n; i++) {
-                                vectorParada[i] = abs(resultVector[i] - vector[i]);
-                        }
+			maxValue = maximumValue(vectorParada, n);
 
-                        maxValue = maximumValue(vectorParada, n);
+			for (int i = 0; i < n; i++) {
+				vector[i] = resultVector[i];
+			}
 
-                        for (int i = 0; i < n; i++) {
-                                vector[i] = resultVector[i];
-                        }
+			fill(resultVector, resultVector + n, 0);
 
-                        fill(resultVector, resultVector + n, 0);
+		} else {
 
-                } else {
+			if (maxValue > TOLERANCE) {
+				for(int i = rank * BLOCKROWS; i < (rank * BLOCKROWS) + (BLOCKROWS - 1); i++) {
+					for(int j = 0; j < BLOCKCOLS; j++) {
+						resultVector[rank * BLOCKROWS] += (matrix.getValue(i,j) * vector[j]);
+					}
+				}
+			} else {
+				break;
+			}
 
-                        if (maxValue > TOLERANCE) {
-                                for(int i = rank * BLOCKROWS; i < (rank * BLOCKROWS) + (BLOCKROWS - 1); i++) {
-                                        for(int j = 0; j < BLOCKCOLS; j++) {
-                                                resultVector[rank * BLOCKROWS] += (matrix.getValue(i,j) * vector[j]);
-                                        }
-                                }
-                        } else {
-                                break;
-                        }
+			for (int i = 0; i < n; i++) {
+				vectorParada[i] = abs(resultVector[i] - vector[i]);
+			}
 
-                        for (int i = 0; i < n; i++) {
-                                vectorParada[i] = abs(resultVector[i] - vector[i]);
-                        }
+			maxValue = maximumValue(vectorParada, n);
 
-                        maxValue = maximumValue(vectorParada, n);
+			for (int i = 0; i < n; i++) {
+				vector[i] = resultVector[i];
+			}
 
-                        for (int i = 0; i < n; i++) {
-                                vector[i] = resultVector[i];
-                        }
+			fill(resultVector, resultVector + n, 0);
 
-                        fill(resultVector, resultVector + n, 0);
+		}
+	}
 
-                }
-        }
+	MPI_Barrier(MPI_COMM_WORLD);
 
-        MPI_Barrier(MPI_COMM_WORLD);
+	MPI_Finalize();
 
-        MPI_Finalize();
+	/*	//Se imprime la matrix
+	   cout << "MATRIX" << endl;
+	   for(int i = 0; i < n; i++) {
+	           for(int j = 0; j < n; j++) {
+	                   cout << matrix[i][j] << ' ';
+	           }
+	           cout<<endl;
+	   }*/
 
-        /*	//Se imprime la matrix
-           cout << "MATRIX" << endl;
-           for(int i = 0; i < n; i++) {
-                   for(int j = 0; j < n; j++) {
-                           cout << matrix[i][j] << ' ';
-                   }
-                   cout<<endl;
-           }
- */
 
 	//Se imprime el vector
 	cout << "VECTOR" << endl;
