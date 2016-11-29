@@ -86,29 +86,29 @@ int main(int argc, char **argv) {
 	double vectorParada[n];
 	fill(vectorParada, vectorParada + n, 0);
 
-/*        int cntNum = ceil((n * n) * d);
+	int cntNum = ceil((n * n) * d);
 
-        const int BLOCKROWS = n/k;      //Numero de filas a descomponer
-        const int BLOCKCOLS = n;        // Numero de columnas a descomponer
-        Matrix subMatrizMpi(BLOCKCOLS,BLOCKROWS);
+	const int BLOCKROWS = n/k;      //Numero de filas a descomponer
+	const int BLOCKCOLS = n;        // Numero de columnas a descomponer
+	Matrix subMatrizMpi(BLOCKCOLS,BLOCKROWS);
 
-        for (int i = 0; i < n; i++) {
-                for (int j = 0; j < n; j++) {
-                        matrix.setValue(i,j,0);
-                }
-                subMatrizMpi.setValue(0,i,0);
-        }
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			matrix.setValue(i,j,0);
+		}
+		subMatrizMpi.setValue(0,i,0);
+	}
 
-        MPI_Datatype blocktype;
-        MPI_Datatype blocktype2;
+	MPI_Datatype blocktype;
+	MPI_Datatype blocktype2;
 
-        MPI_Type_vector(BLOCKROWS, BLOCKCOLS, n, MPI_DOUBLE, &blocktype2);
-        MPI_Type_create_resized(blocktype2, 0, sizeof(double), &blocktype);
-        MPI_Type_commit(&blocktype);
+	MPI_Type_vector(BLOCKROWS, BLOCKCOLS, n, MPI_DOUBLE, &blocktype2);
+	MPI_Type_create_resized(blocktype2, 0, sizeof(double), &blocktype);
+	MPI_Type_commit(&blocktype);
 
-        unsigned seed = static_cast<unsigned>(time(0));
-        srand(seed);
-
+	unsigned seed = static_cast<unsigned>(time(0));
+	srand(seed);
+/*
         if (rank == 0){
                 MPI_Send(&seed, 1, MPI_UNSIGNED, 1, 0, MPI_COMM_WORLD);
 
