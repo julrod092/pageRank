@@ -107,13 +107,13 @@ int main(int argc, char **argv) {
 	MPI_Type_commit(&blocktype);
 
 	long seed = time(0);
-	srand(seed);
+
 	cout << rank << endl;
 	cout << seed << endl;
 
 	if (rank == 0) {
 		MPI_Send(&seed, 1, MPI_LONG, 1, 0, MPI_COMM_WORLD);
-
+		srand(seed);
 		for (int j = 0; j < n; j++) {
 			int i = 1 + (static_cast <int> (rand()) % n) - 1;
 			if (i != j) {
@@ -159,7 +159,7 @@ int main(int argc, char **argv) {
 	} else {
 
 		MPI_Recv(&seed, 1, MPI_LONG, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-	
+		srand(seed);
 		for (int j = 0; j < n; j++) {
 			int i = 1 + (static_cast <int> (rand()) % n) - 1;
 			if (i != j) {
@@ -216,8 +216,9 @@ int main(int argc, char **argv) {
 
 	while(true) {
 
+		MPI_Scatterv(matrix.getMatrix(), counts, disps, blocktype, subMatrizMpi.getMatrix(), BLOCKROWS * BLOCKCOLS, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+
 		if (rank == 0) {
-			MPI_Scatterv(matrix.getMatrix(), counts, disps, blocktype, subMatrizMpi.getMatrix(), BLOCKROWS * BLOCKCOLS, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
 			if (maxValue > TOLERANCE) {
 				for(int i = 0; i < BLOCKROWS; i++) {
