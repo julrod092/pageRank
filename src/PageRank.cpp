@@ -110,7 +110,7 @@ int main(int argc, char **argv) {
 	srand(seed);
 
 	if (rank == 0) {
-		MPI_Send(&seed, 1, MPI_LONG, 1, 0, MPI_COMM_WORLD);
+		//MPI_Send(&seed, 1, MPI_LONG, 1, 0, MPI_COMM_WORLD);
 
 		for (int j = 0; j < n; j++) {
 			int i = 1 + (static_cast <int> (rand()) % n) - 1;
@@ -152,7 +152,7 @@ int main(int argc, char **argv) {
 		}
 
 	} else {
-		MPI_Recv(&seed, 1, MPI_LONG, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+		//MPI_Recv(&seed, 1, MPI_LONG, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
 		for (int j = 0; j < n; j++) {
 			int i = 1 + (static_cast <int> (rand()) % n) - 1;
